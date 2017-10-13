@@ -8,13 +8,12 @@ def reverse_string_iteratively(s):
 
 
 def reverse_string_recursively(s):
-	i = 1
-	reverse_s = ""
-	while i <= len(s):
-		reverse_s += s[-i]
-		i += 1
-	return reverse_s
+	if s == "":
+		return s
+	else:
+		print (s)
+		return reverse_string_recursively(s[1:]) + s[0]
 
-s = 'aabbccdeeffghh'
+s = 'abcdfg'
 print (reverse_string_iteratively(s))
 print (reverse_string_recursively(s))
