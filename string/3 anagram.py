@@ -26,8 +26,8 @@ def check_anagrams3(s1, s2):
 
 
 # Test the functions above
-s1 = 'nap'
-s2 = 'pan'
+s1 = 'napa'
+s2 = 'pana'
 s3 = 'abc'
 
 # Return true as s1 and as 2 are anagrams
