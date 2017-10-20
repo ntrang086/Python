@@ -1,3 +1,4 @@
+# Reverse a string iteratively
 def reverse_string_iteratively(s):
 	i = 1
 	reverse_s = ""
@@ -6,7 +7,7 @@ def reverse_string_iteratively(s):
 		i += 1
 	return reverse_s
 
-
+# Reverse a string recursively
 def reverse_string_recursively(s):
 	if s == "":
 		return s
