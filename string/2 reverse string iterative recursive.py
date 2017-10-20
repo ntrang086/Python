@@ -11,7 +11,6 @@ def reverse_string_recursively(s):
 	if s == "":
 		return s
 	else:
-		print (s)
 		return reverse_string_recursively(s[1:]) + s[0]
 
 s = 'abcdfg'
