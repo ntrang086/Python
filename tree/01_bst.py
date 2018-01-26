@@ -100,3 +100,23 @@ class BinarySearchTree():
                 else:
                     parent_children.append((node.key, node.left.key, node.right.key))
         return parent_children
+
+
+if __name__ == "__main__":
+    print ("Create a Binary Search Tree")
+    bst = BinarySearchTree()
+
+    print ("Insert 13, 14, 14 again, 4, 5 and 6")
+    bst.insert(13)
+    bst.insert(14)
+    bst.insert(14)
+    bst.insert(4)
+    bst.insert(5)
+    bst.insert(6)
+
+    tree = bst.get_tree(bst.root)
+    print ("\nPrint the tree")
+    bst.print_tree()
+
+    print ("\nGet pairs of children and their parent:", bst.get_child_parent(tree))
+    print ("\nGet pairs of parents and their children:", bst.get_parent_children(tree))
