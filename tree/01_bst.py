@@ -58,3 +58,45 @@ class BinarySearchTree():
                 current_node.right = Node(key)
                 current_node.right.parent = current_node
     
+    def get_tree(self, current_node):
+        """Get the tree with all its nodes."""
+        tree = []
+        if current_node is None:
+            return tree
+        tree += [current_node]
+        if current_node.left:
+            tree += self.get_tree(current_node.left)
+        if current_node.right:
+            tree += self.get_tree(current_node.right)
+        return tree
+
+    def print_tree(self):
+        """Print out the key for each node in the tree."""
+        print ([node.key for node in self.get_tree(self.root)])
+
+    def get_child_parent(self, tree):
+        """Output a list of tuples; each tuple contains a child and its parent."""
+        child_parent_pairs = []
+        for node in tree:
+            if node.parent is not None:
+                child_parent_pairs.append((node.key, node.parent.key))
+            else:
+                child_parent_pairs.append((node.key, node.parent))
+        return child_parent_pairs
+
+    def get_parent_children(self, tree):
+        """Output a list of tuples; each tuple contain a node, its left child 
+        and its right child."""
+        parent_children = []
+        for node in tree:
+            if node.left is None:
+                if node.right is None:
+                    parent_children.append((node.key, node.left, node.right))
+                else:
+                    parent_children.append((node.key, node.left, node.right.key))
+            else:
+                if node.right is None:
+                    parent_children.append((node.key, node.left.key, node.right))
+                else:
+                    parent_children.append((node.key, node.left.key, node.right.key))
+        return parent_children
