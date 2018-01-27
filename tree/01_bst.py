@@ -1,5 +1,7 @@
 """Implement a Binary Search Tree with insert, delete, search and other functions"""
 
+from collections import deque
+
 class Node:
     """A node in a Binary Search Tree. Each node has info about its key, parent 
     (if any), and children (if any)."""
@@ -15,9 +17,9 @@ class Node:
         """Retrieve children (if any) of a node."""
         children = []
         if self.left is not None:
-            children.append(self.left.key)
+            children.append(self.left)
         if self.right is not None:
-            children.append(self.right.key)
+            children.append(self.right)
         return children
 
 
@@ -71,10 +73,8 @@ class BinarySearchTree():
         return
     
     def get_tree(self, current_node):
-        """Get the tree with all its nodes."""
+        """Get the tree with all its nodes in Depth First order."""
         tree = []
-        if current_node is None:
-            return tree
         tree += [current_node]
         if current_node.left:
             tree += self.get_tree(current_node.left)
@@ -83,8 +83,26 @@ class BinarySearchTree():
         return tree
 
     def print_tree(self):
-        """Print out the key for each node in the tree."""
+        """Print out the key for each node in the tree in Depth First order."""
         print ([node.key for node in self.get_tree(self.root)])
+
+    def get_tree_breadth_first(self, current_node):
+        """Get the tree with all its nodes in Breadth First order."""
+        tree = []
+        queue = deque()
+        queue.append(current_node)
+        while len(queue) > 0:
+            node = queue.popleft()
+            tree.append(node)
+            if node.left is not None:
+                queue.append(node.left)
+            if node.right is not None:
+                queue.append(node.right)
+        return tree
+
+    def print_tree_breadth_first(self):
+        """Print out the key for each node in the tree in Breadth First order."""
+        print ([node.key for node in self.get_tree_breadth_first(self.root)])
 
     def get_child_parent(self, tree):
         """Output a list of tuples; each tuple contains a child and its parent."""
@@ -125,7 +143,7 @@ if __name__ == "__main__":
         bst.insert(element)
 
     tree = bst.get_tree(bst.root)
-    print ("\nPrint the tree")
+    print ("\nPrint the tree in Depth First order")
     bst.print_tree()
 
     print ("The root node is", bst.root.key)
@@ -135,3 +153,6 @@ if __name__ == "__main__":
 
     print ("\nSearch for 8:", bst.search(8, bst.root).key)
     print ("Search for 100:", bst.search(100, bst.root))
+
+    print ("\nPrint the tree in Breadth First order")
+    bst.print_tree_breadth_first()
