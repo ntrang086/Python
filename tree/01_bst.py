@@ -57,6 +57,10 @@ class BinarySearchTree():
             else:
                 current_node.right = Node(key)
                 current_node.right.parent = current_node
+
+    def delete():
+        """Delete a key from the tree."""
+        return
     
     def get_tree(self, current_node):
         """Get the tree with all its nodes."""
@@ -106,17 +110,17 @@ if __name__ == "__main__":
     print ("Create a Binary Search Tree")
     bst = BinarySearchTree()
 
-    print ("Insert 13, 14, 14 again, 4, 5 and 6")
-    bst.insert(13)
-    bst.insert(14)
-    bst.insert(14)
-    bst.insert(4)
-    bst.insert(5)
-    bst.insert(6)
+    test_list = [8, 3, 1, 6, 4, 7, 10, 14, 13, 14]
+    print ("Insert the elements from the following list:", test_list)
+    for element in test_list:
+        print ("Insert", element)
+        bst.insert(element)
 
     tree = bst.get_tree(bst.root)
     print ("\nPrint the tree")
     bst.print_tree()
+
+    print ("\nThe root node is", bst.root.key)
 
     print ("\nGet pairs of children and their parent:", bst.get_child_parent(tree))
     print ("\nGet pairs of parents and their children:", bst.get_parent_children(tree))
