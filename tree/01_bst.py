@@ -58,7 +58,15 @@ class BinarySearchTree():
                 current_node.right = Node(key)
                 current_node.right.parent = current_node
 
-    def delete():
+    def search(self, key, current_node):
+        """Search for a key in the tree using Depth First Search."""
+        if current_node is None or key == current_node.key:
+            return current_node
+        if key < current_node.key:
+            return self.search(key, current_node.left)
+        return self.search(key, current_node.right)
+    
+    def delete(self, key):
         """Delete a key from the tree."""
         return
     
@@ -120,7 +128,10 @@ if __name__ == "__main__":
     print ("\nPrint the tree")
     bst.print_tree()
 
-    print ("\nThe root node is", bst.root.key)
+    print ("The root node is", bst.root.key)
 
     print ("\nGet pairs of children and their parent:", bst.get_child_parent(tree))
-    print ("\nGet pairs of parents and their children:", bst.get_parent_children(tree))
+    print ("Get pairs of parents and their children:", bst.get_parent_children(tree))
+
+    print ("\nSearch for 8:", bst.search(8, bst.root).key)
+    print ("Search for 100:", bst.search(100, bst.root))
