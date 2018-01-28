@@ -81,6 +81,38 @@ class BinarySearchTree():
             current_node = current_node.right
         return current_node
 
+    def replace_child(self, child, parent, new_child=None):
+        """Replace a child of parent with a new child."""
+        if parent:
+            if child is parent.left:
+                parent.left = new_child
+            else:
+                parent.right = new_child
+        if new_child:
+            new_child.parent = parent
+
+    def delete(self, key, current_node):
+        """Delete a key from the tree, choosing a replacement randomly"""
+        # Search for the node to delete
+        node = self.search(key, current_node)
+        if node is None:
+            print ("Key {} is not found in the tree".format(key))
+        # If the node is found, proceed to delete it
+        if node is not None:
+            parent = node.parent
+            if node.left and node.right:
+                predecessor = self.find_max_node(node.left)
+                successor = self.find_min_node(node.right)
+                chosen_node = random.choice([predecessor, successor])
+                node.key = chosen_node.key
+                self.delete(chosen_node.key, chosen_node)
+            elif node.left:
+                self.replace_child(node, parent, node.left)
+            elif node.right:
+                self.replace_child(node, parent, node.right)
+            else:
+                self.replace_child(node, parent, None)
+    
     def get_tree(self, current_node):
         """Get the tree with all its nodes in Depth First order."""
         tree = []
@@ -165,3 +197,11 @@ if __name__ == "__main__":
 
     print ("\nPrint the tree in Breadth First order")
     bst.print_tree_breadth_first()
+
+    print ("\nDelete the following nodes:")
+    print ("Delete 200")
+    bst.delete(200, bst.root)
+    print ("Delete 8")
+    bst.delete(8, bst.root)
+    print ("The tree now has the following elements:")
+    bst.print_tree()
