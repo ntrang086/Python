@@ -1,6 +1,7 @@
 """Implement a Binary Search Tree with insert, delete, search and other functions"""
 
 from collections import deque
+import random
 
 class Node:
     """A node in a Binary Search Tree. Each node has info about its key, parent 
@@ -67,11 +68,19 @@ class BinarySearchTree():
         if key < current_node.key:
             return self.search(key, current_node.left)
         return self.search(key, current_node.right)
-    
-    def delete(self, key):
-        """Delete a key from the tree."""
-        return
-    
+
+    def find_min_node(self, current_node):
+        """Gets the minimum node in a subtree starting with current_node"""
+        while current_node.left:
+            current_node = current_node.left
+        return current_node
+
+    def find_max_node(self, current_node):
+        """Gets the maximum node in a subtree starting with current_node"""
+        while current_node.right:
+            current_node = current_node.right
+        return current_node
+
     def get_tree(self, current_node):
         """Get the tree with all its nodes in Depth First order."""
         tree = []
