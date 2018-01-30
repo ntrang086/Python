@@ -1,5 +1,7 @@
 """Check if a tree is a bst"""
 
+from collections import deque
+
 class Node:
     """A node in a Tree. Each node has info about its key, parent 
     (if any), and children (if any). If is_binary is True, there will
@@ -18,3 +20,42 @@ class Node:
         """Retrieve children (if any) of a node."""
         return self.children
 
+class NArayTree():
+    """A non-binary tree with a root. Each node has an arbitrary number of children"""
+    def __init__(self, root=None, is_binary=False):
+        """Create a non-binary tree."""
+        self.root = root
+        self.is_binary = is_binary
+    
+    def insert(self, key, current_node, left=True):
+        """Insert a key as a child of current_node. Prioritize inserting into the left
+        tree is left is True."""
+        new_node = Node(key, self.is_binary)
+        new_node.parent = current_node
+        if self.root is None:
+            self.root = Node(key, self.is_binary)
+        elif self.search(key, current_node):
+            print ("Key {} already exists".format(key))
+        elif self.is_binary == False:
+            current_node.children.append(new_node)
+        elif self.is_binary:
+            if len(current_node.children) <= 1:
+                current_node.children.append(new_node)
+                if left:
+                    if current_node.left is None:
+                        current_node.left = new_node
+                    else:
+                        current_node.right = new_node
+                else:
+                    if current_node.right is None:
+                        current_node.right = new_node
+                    else:
+                        current_node.left = new_node
+            else:
+                if left:
+                    self.insert(key, current_node.left, left)
+                else:
+                    self.insert(key, current_node.right, left)
+        return new_node
+
+    
