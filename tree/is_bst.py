@@ -2,6 +2,33 @@
 
 from collections import deque
 
+def is_binary_search_tree(current_node):
+    """Check if a tree starting with current_node is a binary tree"""
+    is_bst = True
+    queue = deque()
+    if current_node:
+        queue.append(current_node)
+    while len(queue) > 0:
+        node = queue.popleft()
+        num_children = len(node.get_children())
+        if num_children > 2:
+            is_bst = False
+        # The subsequent conditions apply to binary trees only
+        elif num_children == 2:
+            is_bst = (node.right.key > node.key > node.left.key and
+                      is_max_node(node) and is_min_node(node))
+            queue.append(node.left)
+            queue.append(node.right)
+        elif node.left:
+            is_bst = is_max_node(node)
+            queue.append(node.left)
+        elif node.right:
+            is_bst = is_min_node(node)
+            queue.append(node.right)
+        if is_bst == False:
+            return is_bst
+    return is_bst
+
 def get_subtree(current_node):
     """Get the subtree starting from current_node."""
     subtree = []
