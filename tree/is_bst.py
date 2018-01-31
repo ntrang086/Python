@@ -58,4 +58,29 @@ class NArayTree():
                     self.insert(key, current_node.right, left)
         return new_node
 
-    
+    def search(self, key, current_node):
+        """Search for a key in the tree using Breadth First Search."""
+        queue = deque()
+        queue.append(current_node)
+        while len(queue) > 0:
+            node = queue.popleft()
+            if node.key == key:
+                return node
+            if len(node.children) > 0:
+                queue.extend(node.children)
+        return None
+
+    def get_tree(self, current_node):
+        """Get the tree with all its nodes in Depth First order."""
+        tree = []
+        tree += [current_node]
+        if current_node.left:
+            tree += self.get_tree(current_node.left)
+        if current_node.right:
+            tree += self.get_tree(current_node.right)
+        return tree
+
+    def print_tree(self):
+        """Print out the key for each node in the tree in Depth First order."""
+        print ([node.key for node in self.get_tree(self.root)])
+
