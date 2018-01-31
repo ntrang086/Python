@@ -2,6 +2,34 @@
 
 from collections import deque
 
+def get_subtree(current_node):
+    """Get the subtree starting from current_node."""
+    subtree = []
+    subtree += [current_node]
+    if current_node.left:
+        subtree += get_subtree(current_node.left)
+    if current_node.right:
+        subtree += get_subtree(current_node.right)
+    return subtree
+
+
+def is_min_node(current_node):
+    """Check if current_node is has the min key compared with its right descendants"""
+    right_subtree = get_subtree(current_node.right)
+    for node in right_subtree:
+        if current_node.key > node.key:
+            return False
+    return True
+
+def is_max_node(current_node):
+    """Check if current_node is has the max key compared with its left descendants"""
+    left_subtree = get_subtree(current_node.left)
+    for node in left_subtree:
+        if current_node.key < node.key:
+            return False
+    return True
+
+
 class Node:
     """A node in a Tree. Each node has info about its key, parent 
     (if any), and children (if any). If is_binary is True, there will
