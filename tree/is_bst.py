@@ -1,6 +1,7 @@
 """Check if a tree is a bst"""
 
 from collections import deque
+from bst import BinarySearchTree
 
 def is_binary_search_tree(current_node):
     """Check if a tree starting with current_node is a binary tree"""
@@ -139,3 +140,64 @@ class NArayTree():
         """Print out the key for each node in the tree in Depth First order."""
         print ([node.key for node in self.get_tree(self.root)])
 
+
+if __name__ == "__main__":
+    print ("Create a Binary Search Tree")
+    bst = BinarySearchTree()
+    test_list = [8, 3, 1, 6, 4, 7, 10, 14, 13, 14]
+    print ("Insert the elements from the following list:", test_list)
+    for element in test_list:
+        print ("Insert", element)
+        bst.insert(element)
+
+    tree = bst.get_tree(bst.root)
+    print ("\nPrint the tree in Depth First order")
+    bst.print_tree()
+    assert is_binary_search_tree(bst.root)
+
+    print ("Create a Binary Tree which is not a Binary Search Tree")
+    is_binary = True
+    non_bst = NArayTree(is_binary=is_binary)
+    non_bst_list = [8, 3, 10]
+    print ("Insert the elements from the following list:", non_bst_list)
+    for element in non_bst_list:
+        assert is_binary_search_tree(non_bst.root)
+        non_bst.insert(element, non_bst.root)
+
+    print ("\nInsert 6 as a right child for node 3")
+    node_3 = non_bst.root.left
+    node_6 = non_bst.insert(6, node_3, left=False)
+    assert is_binary_search_tree(non_bst.root)
+
+    print ("\nInsert 2 as a left child for node 6")
+    node_2 = non_bst.insert(2, node_6, left=True)
+    assert is_binary_search_tree(non_bst.root) == False
+    assert is_binary_search_tree(node_3) == False
+
+    print ("\nRemove 2")
+    node_6.left = None
+    node_6.children = []
+    assert is_binary_search_tree(non_bst.root)
+
+    print ("\nInsert 9 as a right child for node 6")
+    node_9 = non_bst.insert(9, node_6, left=False)
+    assert is_binary_search_tree(non_bst.root) == False
+
+    print ("\nRemove 9")
+    node_6.right = None
+    node_6.children = []
+    assert is_binary_search_tree(non_bst.root)
+
+    print ("\nInsert 14 as a right child for node 10")
+    node_14 = non_bst.insert(14, non_bst.root.right, left=False)
+    assert is_binary_search_tree(non_bst.root)
+
+    print ("\nInsert 7 as a left child for node 14")
+    node_7 = non_bst.insert(7, node_14)
+    assert is_binary_search_tree(non_bst.root) == False
+    assert is_binary_search_tree(node_14)
+
+    print ("\nPrint the tree in Depth First order")
+    non_bst.print_tree()
+
+    
