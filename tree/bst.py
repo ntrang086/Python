@@ -198,6 +198,11 @@ if __name__ == "__main__":
     print ("\nPrint the tree in Breadth First order")
     bst.print_tree_breadth_first()
 
+    print ("\nFind the min, max and 2nd largest node in the tree")
+    print (bst.find_min_node(bst.root).key)
+    print (bst.find_max_node(bst.root).key)
+    print (bst.find_max_node(bst.root).parent.key)
+
     print ("\nDelete the following nodes:")
     print ("Delete 200")
     bst.delete(200, bst.root)
