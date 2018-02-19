@@ -25,3 +25,42 @@ def sum_children(current_node):
 def is_sum_tree(current_node):
     return sum_children(current_node) == current_node.key
 
+if __name__ == "__main__":
+    print ("Create a Binary Search Tree that is not a sum tree")
+    bst = BinarySearchTree()
+    test_list = [8, 3, 1, 6, 4, 7, 10, 14, 13, 14]
+    print ("Insert the elements from the following list:", test_list)
+    for element in test_list:
+        print ("Insert", element)
+        bst.insert(element)
+
+    tree = bst.get_tree(bst.root)
+    print ("\nPrint the tree in Depth First order")
+    bst.print_tree()
+    assert is_sum_tree(bst.root) == False
+
+    print ("Create a Binary Tree that is a sum tree")
+    sum_tree = NArayTree(is_binary=True)
+    test_list = [15, 8, 5, 2]
+    print ("Insert the elements from the following list:", test_list)
+    for element in test_list:
+        print ("Insert", element)
+        sum_tree.insert(element, sum_tree.root)
+
+    tree = sum_tree.get_tree(sum_tree.root)
+    print ("\nPrint the tree in Depth First order")
+    sum_tree.print_tree()
+    assert is_sum_tree(sum_tree.root)
+
+    print ("\nInsert 2 and 6 as children of node 8")
+    node_8 = sum_tree.root.left
+    node_2 = sum_tree.insert(2, node_8)
+    node_6 = sum_tree.insert(6, node_8)
+    assert is_sum_tree(sum_tree.root) == False
+
+    print ("\nInsert 1 and 5 as children for node 6")
+    node_1 = sum_tree.insert(1, node_6)
+    assert is_sum_tree(sum_tree.root) == False
+    node_5 = sum_tree.insert(5, node_6)
+    assert is_sum_tree(node_6)
+
