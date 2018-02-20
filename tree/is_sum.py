@@ -23,7 +23,11 @@ def sum_children(current_node):
     return sum_children
 
 def is_sum_tree(current_node):
-    return sum_children(current_node) == current_node.key
+    if current_node is None:
+        return True
+    return (sum_children(current_node) == current_node.key) \
+            and is_sum_tree(current_node.left) \
+            and is_sum_tree(current_node.right)
 
 if __name__ == "__main__":
     print ("Create a Binary Search Tree that is not a sum tree")
