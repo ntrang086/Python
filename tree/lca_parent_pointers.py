@@ -21,7 +21,7 @@ def lowest_common_ancestor(node_1, node_2):
     node_2_ancestors_set = set(find_ancestors(node_2))
     for ancestor_1 in node_1_ancestors:
         if ancestor_1 in node_2_ancestors_set:
-            return ancestor_1.key
+            return ancestor_1
 
 if __name__ == "__main__":
     print ("Create a Binary Search Tree that is not a sum tree")
