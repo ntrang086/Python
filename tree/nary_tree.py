@@ -60,6 +60,8 @@ class NArayTree():
 
     def search(self, key, current_node):
         """Search for a key in the tree using Breadth First Search."""
+        if current_node is None or key == current_node.key:
+            return current_node
         queue = deque()
         queue.append(current_node)
         while len(queue) > 0:
