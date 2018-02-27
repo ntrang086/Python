@@ -63,6 +63,24 @@ class LinkedList():
             self.head = self.head.next
         return deleted_node
 
+    def delete_position(self, position):
+        """Delete a node at a specified position. Return the deleted
+        node or None if position is grater than the length of list"""
+        if position < 1 or self.head is None:
+            return None
+        if position == 1:
+            return self.delete_head()
+        current_node = self.head
+        previous_node = None
+        current_pos = 1
+        while current_pos < position and current_node:
+            previous_node = current_node
+            current_node = current_node.next
+            current_pos += 1
+        if current_node:
+            previous_node.next = current_node.next
+        return current_node
+
     def get_position(self, position):
         """Return a node from the specified position. Assume head is
         at position 1. Return None if position is greater than the length
@@ -103,3 +121,7 @@ if __name__ == "__main__":
     print (linked_list.get_position(2).key)
     # Should print 3 
     print (linked_list.get_position(3).key)
+    # Should print 3 
+    print (linked_list.delete_position(3).key)
+    # Should print None
+    print (linked_list.get_position(3))
