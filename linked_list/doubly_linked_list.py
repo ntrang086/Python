@@ -18,3 +18,29 @@ class DoublyLinkedList():
             new_node.next = self.head
         self.head = new_node
 
+    def insert_after(self, key, previous_node):
+        """Insert a key after a specified node.
+        Do nothing if node is None"""
+        new_node = Node(key)
+        if previous_node is None:
+            print ("Previous node is None. Did nothing.")
+            return        
+        new_node.previous = previous_node
+        new_node.next = previous_node.next
+        previous_node.next = new_node
+        if new_node.next:
+            new_node.next.previous = new_node
+
+    def insert_before(self, key, next_node):
+        """Insert a key before a specified node.
+        Do nothing if node is None"""
+        new_node = Node(key)
+        if next_node is None:
+            print ("Next node is None. Did nothing.")
+            return        
+        new_node.previous = next_node.previous
+        new_node.next = next_node
+        next_node.previous = new_node
+        if new_node.previous:
+            new_node.previous.next = new_node
+
