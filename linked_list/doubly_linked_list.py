@@ -79,3 +79,14 @@ class DoublyLinkedList():
         while current_node:
             print (current_node.key)
             current_node = current_node.next
+
+
+if __name__ == "__main__":
+    # Initialize a DoublyLinkedList with a head that has key 2
+    doubly_linked_list = DoublyLinkedList(Node(2))
+    doubly_linked_list.insert_front(1)
+    doubly_linked_list.insert_after(4, doubly_linked_list.head.next)
+    doubly_linked_list.insert_before(3, doubly_linked_list.head.next)
+    
+    # Should print 1, 2, 3, and 4 respectively
+    doubly_linked_list.print_linked_list()
