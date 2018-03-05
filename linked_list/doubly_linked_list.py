@@ -44,3 +44,38 @@ class DoublyLinkedList():
         if new_node.previous:
             new_node.previous.next = new_node
 
+    def append(self, key):
+        """Append the key to the end of the list"""
+        new_node = Node(key)
+        if self.head is None:
+            self.head = new_node
+        else:
+            current_node = self.head
+            while current_node.next:
+                current_node = current_node.next
+            current_node.next = new_node
+            new_node.previous = current_node
+    
+    def delete(self, key):
+        """Delete a node with a specified key and return the node.
+        Return None if the key is not in the list"""
+        current_node = self.head
+        previous_node = None
+        while current_node:
+            if current_node.key == key:
+                if previous_node:
+                    previous_node.next = current_node.next
+                else:
+                    self.head = current_node.next
+                if current_node.next:
+                    current_node.next.previous = previous_node
+                return current_node
+            previous_node = current_node
+            current_node = current_node.next
+        return current_node
+
+    def print_linked_list(self):
+        current_node = self.head
+        while current_node:
+            print (current_node.key)
+            current_node = current_node.next
