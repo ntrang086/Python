@@ -96,6 +96,13 @@ class LinkedList():
             return current_node
         return None
 
+    def print_linked_list(self):
+        current_node = self.head
+        while current_node:
+            print (current_node.key)
+            current_node = current_node.next
+            
+
 if __name__ == "__main__":
     # Initialize a LinkedList with a head that has key 1
     linked_list = LinkedList(Node(1))
