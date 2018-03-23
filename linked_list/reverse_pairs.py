@@ -22,3 +22,14 @@ def reverse_pair(linked_list):
         current_pos += 1
     return linked_list
 
+if __name__ == "__main__":
+    # Initialize a LinkedList with a head that has key 1
+    linked_list = LinkedList(Node("A"))
+    linked_list.append("B")
+    linked_list.append("C")
+    linked_list.append("D")
+    linked_list.append("E")
+
+    #linked_list.print_linked_list()
+    reverse_pair(linked_list)
+    linked_list.print_linked_list()
