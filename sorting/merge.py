@@ -5,7 +5,7 @@ def merge_sort_top_down(array):
     until the sublists are trivially sorted, and then merge
     the sublists while returning up the call chain.
     https://en.wikipedia.org/wiki/Merge_sort"""
-    
+
     # Base case: a list with 1 or 0 item is sorted
     if len(array) <= 1:
         return array
@@ -30,7 +30,8 @@ def merge(left, right):
     """Helper function for merge_sort_top_down. 
     Merge left and right sublists."""
 
-    # Compare
+    # Compare the first item of each sublist and
+    # add the smaller one to result first
     result = []
     while left and right:
         if left[0] < right[0]:
