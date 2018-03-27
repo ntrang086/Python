@@ -7,9 +7,6 @@ def quick_sort_lomuto(array, low, high):
     items and the high items; then recursively sort the sub-arrays.
     """
 
-    # Base case: a list with 1 or 0 item is sorted
-    if len(array) <= 1:
-        return array
     if low < high:
         p = partition_lomuto(array, low, high)
         quick_sort_lomuto(array, low, p - 1)
@@ -21,6 +18,7 @@ def partition_lomuto(array, low, high):
     Reorder the array so that all items with values less than
     the pivot come before the pivot, while all items with values 
     greater than the pivot come after it. 
+    Return the index of pivot from the reordered array.
     """
 
     # Pick a pivot
