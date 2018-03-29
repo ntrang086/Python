@@ -2,6 +2,8 @@
 https://en.wikipedia.org/wiki/Quicksort
 """
 
+from insert import insertion_sort
+
 def quick_sort_lomuto(array, low, high):
     """Divide a large array into two smaller sub-arrays: the low 
     items and the high items; then recursively sort the sub-arrays.
@@ -67,6 +69,24 @@ def partition_hoare(array, low, high):
         if i >= j:
             return j
         array[i], array[j] = array[j], array[i]
+
+def median_of_three(array, low, high):
+    """Find the median of the left-most, right-most and center 
+    items of an array
+    """
+    center = int((low + high)/2)
+    # Reorder the left-most, right-most and center items
+    # so that array[center] is the median of the three
+    if array[center] < array[low]:
+        array[center], array[low] = array[low], array[center]
+    if array[high] < array[center]:
+        array[high], array[center] = array[center], array[high]
+    if array[high] < array[low]:
+        array[high], array[low] = array[low], array[high]
+    
+    # Swap the pivot array[center] with array[high - 1]
+    array[center], array[high - 1] = array[high - 1], array[center]
+    return array[high - 1]
 
 
 if __name__ == "__main__":
