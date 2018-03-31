@@ -70,6 +70,19 @@ def partition_hoare(array, low, high):
             return j
         array[i], array[j] = array[j], array[i]
 
+def quick_sort(array, low, high):
+    """Optimize quick sort by using median of three as pivot and
+    switching to a non-recursive sorting algorithm such as insertion sort
+    when the number of items is below a cuttoff, usually around 10.
+    """
+    if (low + 10) <= high:
+        p = partition(array, low, high)
+        quick_sort(array, low, p - 1)
+        quick_sort(array, p + 1, high)
+    else:
+        insertion_sort(array)
+    return array
+
 def partition(array, low, high):
     """Use two indices i and j that start at the ends of the array,
     then move toward each other, until they detect an inversion: 
@@ -147,3 +160,5 @@ if __name__ == "__main__":
     print (quick_sort_lomuto(array, 0, len(array) - 1))
     array = [6, 5, 3, 1, 8, 7, 2, 4]
     print (quick_sort_hoare(array, 0, len(array) - 1))
+    array = [6, 5, 3, 1, 8, 7, 2, 4, 9, 15, 10, 14, 11, 13, 12]
+    print (quick_sort(array, 0, len(array) - 1))
