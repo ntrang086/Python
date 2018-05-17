@@ -134,6 +134,24 @@ class Graph(object):
                     self._depth_first_traversal_util(next_node.value, seen, result)
         return result
 
+    def depth_first_traversal_iterative(self, node_val):
+        seen = set()
+        stack = []
+        result = []
+        node = self.search_node(node_val)
+        if node:
+            stack.append(node)
+        while stack:
+            node = stack.pop()
+            if node not in seen:
+                result.append(node.value)
+                seen.add(node)
+            for edge in node.edges:
+                if node is edge.node_from:
+                    if edge.node_to not in seen:
+                        stack.append(edge.node_to)
+        return result
+
     def _update_transitive_row(self, node_val, seen, transitive_row):
         """Depth-first search helper function for transitive_closure. Traverse
         the graph from node_val and update the transitive_matrix accordingly.
@@ -193,6 +211,7 @@ if __name__ == "__main__":
 
     # Test depth-first traversal
     assert graph.depth_first_traversal(1) == [1, 2, 3, 4]
+    assert graph.depth_first_traversal_iterative(1) == [1, 4, 3, 2]
 
     
     graph.clear()
@@ -216,4 +235,5 @@ if __name__ == "__main__":
                                             [1, 1, 1, 1],
                                             [0, 0, 0, 1]]
 
+    assert graph_2.depth_first_traversal_iterative(0) == [0, 2, 3, 1]
     graph_2.clear()
