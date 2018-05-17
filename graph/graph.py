@@ -23,7 +23,8 @@ class Graph(object):
     """A directed graph contains a list of vertexes and edges. It may have
     cycles. It has functions to insert/delete a node or an edge, return various
     representations and traverse the nodes. Assume that each node has a unique
-    value, but edges do not have to."""
+    value, but edges do not have to.
+    """
 
     def __init__(self, nodes=[], edges=[]):
         self.nodes = nodes
@@ -86,8 +87,8 @@ class Graph(object):
         nodes. Store an edge value in each spot, or a 0 if no edge exists.
         """
         max_index = max(node.value for node in self.nodes)
-        # Initialize a matrix. Note that we can't use * for to create a list of
-        # sublists because this will create a list containing (max_index + 1) 
+        # Initialize a matrix. Note that we can't use * for for the outer list,
+        # i.e. [[0] * (max_index + 1) * (max_index + 1),] because this will create a list containing (max_index + 1) 
         # references to the same sublist.
         adjacency_matrix = [[0] * (max_index + 1) for i in range((max_index + 1))]
         for edge in self.edges:
@@ -125,17 +126,47 @@ class Graph(object):
         node = self.search_node(node_val)
         if node:
             result.append(node.value)
-            seen.add(node)
+            seen.add(node_val)
         for edge in node.edges:
             if node is edge.node_from:
                 next_node = edge.node_to
-                if next_node not in seen:
+                if next_node.value not in seen:
                     self._depth_first_traversal_util(next_node.value, seen, result)
         return result
 
+    def _update_transitive_row(self, node_val, seen, transitive_row):
+        """Depth-first search helper function for transitive_closure. Traverse
+        the graph from node_val and update the transitive_matrix accordingly.
+        """
+        node = self.search_node(node_val)
+        if node:
+            seen.add(node_val)
+            for edge in node.edges:
+                if node is edge.node_from:
+                    next_node = edge.node_to
+                    transitive_row[next_node.value] = 1
+                    # If all the cells of the row have been updated, move on to next row
+                    if sum(transitive_row) == len(transitive_row):
+                        break
+                    if next_node.value not in seen:
+                        self._update_transitive_row(next_node.value, seen, transitive_row)
+        return transitive_row
+
+    def transitive_closure(self):
+        """Find the transitive closure matrix using DFS. Rows represent "from"
+        nodes, and columns "to" nodes. If a cell has value of 1, there's a path
+        between "from" and "to" nodes; if 0, there is no path.
+        """
+        max_index = max(node.value for node in self.nodes)
+        transitive_matrix = [[0] * (max_index + 1) for i in range((max_index + 1))]
+        for i in range(max_index + 1):
+            transitive_matrix[i] = self._update_transitive_row(i, set(), transitive_matrix[i])
+        return transitive_matrix
+
     def clear(self):
         """Clear all nodes and edges. Otherwise, when creating a new graph, the
-        nodes and edges of an old graph may be added to the new one."""
+        nodes and edges of an old graph may be added to the new one.
+        """
         self.nodes.clear()
         self.edges.clear()
 
@@ -161,9 +192,9 @@ if __name__ == "__main__":
     assert graph.breadth_first_traversal(1) == [1, 2, 3, 4]
 
     # Test depth-first traversal
-    #node_1 = graph.nodes[0]
     assert graph.depth_first_traversal(1) == [1, 2, 3, 4]
 
+    
     graph.clear()
 
     # Create another graph
@@ -179,3 +210,10 @@ if __name__ == "__main__":
     assert graph_2.breadth_first_traversal(2) == [2, 0, 3, 1]
     # Test depth-first traversal
     assert graph_2.depth_first_traversal(2) == [2, 0, 1, 3]
+    # Test transitive closure
+    assert graph_2.transitive_closure() == [[1, 1, 1, 1],
+                                            [1, 1, 1, 1],
+                                            [1, 1, 1, 1],
+                                            [0, 0, 0, 1]]
+
+    graph_2.clear()
