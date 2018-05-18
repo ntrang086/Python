@@ -2,6 +2,7 @@
 functions that return various representations of the same graph."""
 
 from collections import deque
+from copy import deepcopy
 
 class Node(object):
     """A node has a value and a list of edges that start or end with it."""
@@ -181,6 +182,26 @@ class Graph(object):
             transitive_matrix[i] = self._update_transitive_row(i, set(), transitive_matrix[i])
         return transitive_matrix
 
+    def find_all_paths(self, node_1, node_2):
+        """Find all possible paths between node_1 and node_2."""
+        paths = []
+        self._find_all_paths_util(node_1, node_2, set(), [], paths)
+        return paths
+
+    def _find_all_paths_util(self, node_1, node_2, seen, path, paths):
+        seen.add(node_1)
+        path.append(node_1)
+        if node_1 is node_2:
+            # Make a copy of path so that any update on path won't affect paths
+            paths.append(deepcopy(path))
+        else:
+            for edge in node_1.edges:
+                if edge.node_to not in seen:
+                    self._find_all_paths_util(edge.node_to, node_2, seen, path, paths)
+        path.pop()
+        seen.remove(node_1)
+
+
     def clear(self):
         """Clear all nodes and edges. Otherwise, when creating a new graph, the
         nodes and edges of an old graph may be added to the new one.
@@ -198,11 +219,15 @@ if __name__ == "__main__":
     graph.insert_edge(103, 3, 4)
 
     # Test the graph representation functions
-    assert graph.get_edge_list() == [(100, 1, 2), (101, 1, 3), (102, 1, 4), (103, 3, 4)]
-    assert graph.get_adjacency_list() == [None, [(2, 100), (3, 101), (4, 102)], None, 
-                                          [(4, 103)], None]
-    assert graph.get_adjacency_matrix() == [[0, 0, 0, 0, 0], [0, 0, 100, 101, 102], 
-                                            [0, 0, 0, 0, 0], [0, 0, 0, 0, 103], [0, 0, 0, 0, 0]]
+    assert graph.get_edge_list() == [(100, 1, 2), (101, 1, 3), 
+                                     (102, 1, 4), (103, 3, 4)]
+    assert graph.get_adjacency_list() == [None, [(2, 100), (3, 101), (4, 102)],
+                                          None, [(4, 103)], None]
+    assert graph.get_adjacency_matrix() == [[0, 0, 0, 0, 0], 
+                                            [0, 0, 100, 101, 102], 
+                                            [0, 0, 0, 0, 0], 
+                                            [0, 0, 0, 0, 103], 
+                                            [0, 0, 0, 0, 0]]
     # Test breadth-first traversal
     assert graph.breadth_first_traversal(1) == [1, 2, 3, 4]
     # Add a cycle for node 2
@@ -212,7 +237,6 @@ if __name__ == "__main__":
     # Test depth-first traversal
     assert graph.depth_first_traversal(1) == [1, 2, 3, 4]
     assert graph.depth_first_traversal_iterative(1) == [1, 4, 3, 2]
-
     
     graph.clear()
 
@@ -236,4 +260,7 @@ if __name__ == "__main__":
                                             [0, 0, 0, 1]]
 
     assert graph_2.depth_first_traversal_iterative(0) == [0, 2, 3, 1]
+    node_0_to_3 = graph_2.find_all_paths(graph_2.nodes[0], graph_2.nodes[3])
+    assert [[node.value for node in path] for path in node_0_to_3]  \
+           == [[0, 1, 2, 3], [0, 2, 3]]
     graph_2.clear()
