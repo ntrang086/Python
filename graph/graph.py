@@ -112,12 +112,28 @@ class Graph(object):
             result.append(node.value)
             for edge in node.edges:
                 # If the node of interest is the start of an edge
-                if node is edge.node_from:
-                    next_node = edge.node_to
-                    if next_node not in seen:
-                        queue.append(next_node)
-                        seen.add(next_node)
+                next_node = edge.node_to
+                if next_node not in seen:
+                    queue.append(next_node)
+                    seen.add(next_node)
         return result
+
+    def level_BFS(self, root):
+        current_level = {root}
+        seen = set()
+        l = 0
+        while True:
+            print (l, [node.value for node in current_level])
+            seen.update(current_level)
+            next_level = set()
+            for node in current_level:
+                for edge in node.edges:
+                    if edge.node_to not in seen:
+                        next_level.add(edge.node_to)
+            if len(next_level) == 0:
+                return
+            current_level = next_level.copy()
+            l += 1
     
     def depth_first_traversal(self, node_val):
         """Traverse the graph in depth-first order starting from node_val."""
@@ -129,10 +145,9 @@ class Graph(object):
             result.append(node.value)
             seen.add(node_val)
         for edge in node.edges:
-            if node is edge.node_from:
-                next_node = edge.node_to
-                if next_node.value not in seen:
-                    self._depth_first_traversal_util(next_node.value, seen, result)
+            next_node = edge.node_to
+            if next_node.value not in seen:
+                self._depth_first_traversal_util(next_node.value, seen, result)
         return result
 
     def depth_first_traversal_iterative(self, node_val):
@@ -148,9 +163,8 @@ class Graph(object):
                 result.append(node.value)
                 seen.add(node)
             for edge in node.edges:
-                if node is edge.node_from:
-                    if edge.node_to not in seen:
-                        stack.append(edge.node_to)
+                if edge.node_to not in seen:
+                    stack.append(edge.node_to)
         return result
 
     def _update_transitive_row(self, node_val, seen, transitive_row):
@@ -161,14 +175,13 @@ class Graph(object):
         if node:
             seen.add(node_val)
             for edge in node.edges:
-                if node is edge.node_from:
-                    next_node = edge.node_to
-                    transitive_row[next_node.value] = 1
-                    # If all the cells of the row have been updated, move on to next row
-                    if sum(transitive_row) == len(transitive_row):
-                        break
-                    if next_node.value not in seen:
-                        self._update_transitive_row(next_node.value, seen, transitive_row)
+                next_node = edge.node_to
+                transitive_row[next_node.value] = 1
+                # If all the cells of the row have been updated, move on to next row
+                if sum(transitive_row) == len(transitive_row):
+                    break
+                if next_node.value not in seen:
+                    self._update_transitive_row(next_node.value, seen, transitive_row)
         return transitive_row
 
     def transitive_closure(self):
@@ -189,10 +202,11 @@ class Graph(object):
         return paths
 
     def _find_all_paths_util(self, node_1, node_2, seen, path, paths):
+        """Helper function for find_all_paths."""
         seen.add(node_1)
         path.append(node_1)
         if node_1 is node_2:
-            # Make a copy of path so that any update on path won't affect paths
+            # Make a copy of path so that any update on it won't affect paths
             paths.append(deepcopy(path))
         else:
             for edge in node_1.edges:
@@ -201,6 +215,21 @@ class Graph(object):
         path.pop()
         seen.remove(node_1)
 
+    def count_all_paths(self, node_1, node_2):
+        """Count all paths between two nodes."""
+        return self._count_all_paths_util(node_1, node_2, set(), 0)
+
+    def _count_all_paths_util(self, node_1, node_2, seen, count):
+        """Helper function for count_all_paths."""
+        seen.add(node_1)
+        if node_1 is node_2:
+            count += 1
+        else:
+            for edge in node_1.edges:
+                if edge.node_to not in seen:
+                    count = self._count_all_paths_util(edge.node_to, node_2, seen, count)
+        seen.remove(node_1)
+        return count
 
     def clear(self):
         """Clear all nodes and edges. Otherwise, when creating a new graph, the
@@ -237,6 +266,7 @@ if __name__ == "__main__":
     # Test depth-first traversal
     assert graph.depth_first_traversal(1) == [1, 2, 3, 4]
     assert graph.depth_first_traversal_iterative(1) == [1, 4, 3, 2]
+    graph.level_BFS(graph.nodes[0])
     
     graph.clear()
 
@@ -263,4 +293,5 @@ if __name__ == "__main__":
     node_0_to_3 = graph_2.find_all_paths(graph_2.nodes[0], graph_2.nodes[3])
     assert [[node.value for node in path] for path in node_0_to_3]  \
            == [[0, 1, 2, 3], [0, 2, 3]]
+    assert graph.count_all_paths(graph_2.nodes[0], graph_2.nodes[3]) == 2
     graph_2.clear()
