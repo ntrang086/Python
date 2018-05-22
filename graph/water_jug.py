@@ -49,47 +49,96 @@ def get_next_states(state, jug_1_cap, jug_2_cap):
                              min(total, jug_2_cap)))
     return next_states
 
-def water_jug_one_path(jug_1_cap, jug_2_cap, d):
+def water_jug_one_path_DFS(jug_1_cap, jug_2_cap, d):
     """From the initial state (0, 0) where both jugs are empty, find a path
     to the goal state. The goal here is to measure a d amount of water. 
-    In other words, the goal state is either (0, d) or (d, 0).
+    In other words, the goal state is either (0, d) or (d, 0). Use DFS.
     """
     # Keep track of seen states. Initially, the jugs are empty
-    return _water_jug_one_path_util((0, 0), d, jug_1_cap, jug_2_cap, set(), [])
+    return _water_jug_one_path_DFS_util((0, 0), d, jug_1_cap, jug_2_cap, set(), [])
     
-def _water_jug_one_path_util(curr_state, d, jug_1_cap, jug_2_cap, seen, result):
+def _water_jug_one_path_DFS_util(curr_state, d, jug_1_cap, jug_2_cap, seen, result):
+    """Helper function for water_jug_one_path_DFS."""
     seen.add(curr_state)
     result.append(curr_state)
-    if curr_state == (0, d) or curr_state == (d, 0):
+    goals = [(0, d), (d, 0)]
+    if curr_state in goals:
         return result
     next_states = get_next_states(curr_state, jug_1_cap, jug_2_cap)
     for state in next_states:
         if state not in seen:
-            return _water_jug_one_path_util(state, d, jug_1_cap, jug_2_cap, seen, result)
+            return _water_jug_one_path_DFS_util(state, d, jug_1_cap, jug_2_cap,
+                                                seen, result)
 
-
-def water_jug_all_paths(jug_1_cap, jug_2_cap, d):
+def water_jug_all_paths_DFS(jug_1_cap, jug_2_cap, d):
     """From the initial state (0, 0) where both jugs are empty, find all paths
     to the goal state. The goal here is to measure a d amount of water. 
-    In other words, the goal state is either (0, d) or (d, 0).
+    In other words, the goal state is either (0, d) or (d, 0). Use DFS.
     """
     # Keep track of seen states. Initially, the jugs are empty
     paths = []
-    _water_jug_all_paths_util((0, 0), d, jug_1_cap, jug_2_cap, set(), [], paths)
+    _water_jug_all_paths_DFS_util((0, 0), d, jug_1_cap, jug_2_cap, 
+                                  set(), [], paths)
     return paths
     
-def _water_jug_all_paths_util(curr_state, d, jug_1_cap, jug_2_cap, seen, path, paths):
+def _water_jug_all_paths_DFS_util(curr_state, d, jug_1_cap, jug_2_cap, 
+                                  seen, path, paths):
+    """Helper function for water_jug_all_paths_DFS."""
     seen.add(curr_state)
     path.append(curr_state)
-    if curr_state == (0, d) or curr_state == (d, 0):
+    goals = [(0, d), (d, 0)]
+    if curr_state in goals:
         paths.append(deepcopy(path))
     next_states = get_next_states(curr_state, jug_1_cap, jug_2_cap)
     for state in next_states:
         if state not in seen:
-            _water_jug_all_paths_util(state, d, jug_1_cap, jug_2_cap, seen, path, paths)
+            _water_jug_all_paths_DFS_util(state, d, jug_1_cap, jug_2_cap, 
+                                          seen, path, paths)
     path.pop()
     seen.remove(curr_state)
 
+def water_jug_one_path_BFS(jug_1_cap, jug_2_cap, d, curr_state):
+    """From the initial state (0, 0) where both jugs are empty, find a path
+    to the goal state. The goal here is to measure a d amount of water. 
+    In other words, the goal state is either (0, d) or (d, 0). Use BFS.
+    """
+    seen = {curr_state}
+    path = []
+    queue = deque()
+    queue.append(curr_state)
+    goals = [(0, d), (d, 0)]
+    while queue:
+        state = queue.popleft()
+        path.append(state)
+        if state in goals:
+            return path
+        next_states = get_next_states(state, jug_1_cap, jug_2_cap)
+        for state in next_states:
+            if state not in seen:
+                queue.append(state)
+                seen.add(state)
+    return []
+
+def water_jug_all_paths_BFS(jug_1_cap, jug_2_cap, d, curr_state):
+    seen = {curr_state}
+    path = []
+    paths = []
+    queue = deque()
+    queue.append(curr_state)
+    goals = [(0, d), (d, 0)]
+    while queue:
+        state = queue.popleft()
+        path.append(state)
+        if state in goals:
+            paths.append(deepcopy(path))
+            path.pop()
+        else:
+            next_states = get_next_states(state, jug_1_cap, jug_2_cap)
+            for state in next_states:
+                if state not in seen:
+                    queue.append(state)
+                    seen.add(state)
+    return paths
 
 if __name__ == "__main__":
     # Test get_next_states
@@ -98,5 +147,11 @@ if __name__ == "__main__":
     assert get_next_states((4, 0), 4, 3) == {(0, 0), (1, 3), (4, 3)}
     assert get_next_states((4, 3), 4, 3) == {(0, 3), (4, 0)}
 
-    print (water_jug_one_path(4, 3, 2))
-    print (water_jug_all_paths(4, 3, 2))
+    assert water_jug_one_path_DFS(4, 3, 2) == [(0, 0), (0, 3), (3, 0), 
+                                               (3, 3),(4, 2), (0, 2)]
+    all_DFS_solutions = water_jug_all_paths_DFS(4, 3, 2)
+    print ("Number of paths using DFS:", len(all_DFS_solutions))
+    print ("Shortest path using DFS:", min(all_DFS_solutions, key=lambda x: len(x)))
+    print (water_jug_one_path_BFS(4, 3, 2, (0, 0)))
+    all_BFS_solutions = water_jug_all_paths_BFS(4, 3, 2, (0, 0))
+    print (all_BFS_solutions)
