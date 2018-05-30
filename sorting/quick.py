@@ -44,7 +44,7 @@ def quick_sort_hoare(array, low, high):
 
     if low < high:
         p = partition_hoare(array, low, high)
-        quick_sort_hoare(array, low, p - 1)
+        quick_sort_hoare(array, low, p)
         quick_sort_hoare(array, p + 1, high)
     return array
 
@@ -59,11 +59,13 @@ def partition_hoare(array, low, high):
 
     # Pick a pivot
     pivot = array[low]
-    i = low
-    j = high
+    i = low - 1
+    j = high + 1
     while True:
+        i += 1
         while array[i] < pivot:
             i += 1
+        j -= 1
         while array[j] > pivot:
             j -= 1
         if i >= j:
@@ -160,5 +162,7 @@ if __name__ == "__main__":
     print (quick_sort_lomuto(array, 0, len(array) - 1))
     array = [6, 5, 3, 1, 8, 7, 2, 4]
     print (quick_sort_hoare(array, 0, len(array) - 1))
+    array = [2 , 4 , 6 , 7 , 9 , 9]
+    print (quick_sort_hoare(array, 0, len(array) - 1))
     array = [6, 5, 3, 1, 8, 7, 2, 4, 9, 15, 10, 14, 11, 13, 12]
-    print (quick_sort(array, 0, len(array) - 1))
+    print (quick_sort(array, 0, len(array) - 1))    
