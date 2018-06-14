@@ -58,6 +58,37 @@ class Graph(object):
             self.union(parent, rank, x, y)
         return False
 
+    def kruskal_MST(self):
+        """Steps:
+        1. Sort all the edges in non-decreasing order of their weight.
+        2. Pick the smallest edge. Check if it forms a cycle with the spanning tree 
+        formed so far. If cycle is not formed, include this edge. Else, discard it.
+        3. Repeat step#2 until there are (V-1) edges in the spanning tree.
+        """
+        result = []
+        # For each node, initialize its parent as itself and its rank as 0
+        parent = []
+        rank = []
+        for i in range(self.num_nodes):
+            parent.append(i)
+            rank.append(0)
+        # Sort all the edges in non-decreasing order of their weight
+        sorted_graph = sorted(self.graph, key=lambda x:x[2])
+        # Index of edges in sorted_graph
+        edge_i = 0
+        # Count the number of edges in the current spannning tree
+        edge_count = 0
+        while edge_count < self.num_nodes - 1:
+            i, j, w = sorted_graph[edge_i]
+            edge_i += 1
+            x = self.find(parent, i)
+            y = self.find(parent, j)
+            if x != y:
+                result.append((i, j, w))
+                edge_count += 1
+                self.union(parent, rank, x, y)
+        return result
+
     def clear(self):
         """Clear all nodes and edges. Otherwise, when creating a new graph, the
         nodes and edges of an old graph may be added to the new one.
@@ -81,3 +112,13 @@ if __name__ == "__main__":
     g.add_edge(3, 4, 1)
     assert g.is_cyclic_union_find() == True
     g.clear()
+
+    # Test Kruskal MST algorithm
+    g = Graph(4)
+    g.add_edge(0, 1, 10)
+    g.add_edge(0, 2, 6)
+    g.add_edge(0, 3, 5)
+    g.add_edge(1, 3, 15)
+    g.add_edge(2, 3, 4)
+     
+    assert g.kruskal_MST() == [(2, 3, 4), (0, 3, 5), (0, 1, 10)]
